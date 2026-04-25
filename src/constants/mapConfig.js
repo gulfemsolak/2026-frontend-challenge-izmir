@@ -4,11 +4,11 @@
  * CartoDB Dark Matter requires no API key and fits the detective dark theme.
  */
 
-/** Default map center — Istanbul (reasonable starting point for Podo sightings) */
-export const DEFAULT_CENTER = [41.0082, 28.9784];
+/** Default map center — Izmir, Turkey (where all evidence data is located) */
+export const DEFAULT_CENTER = [38.4192, 27.1287];
 
-/** Default zoom level — city-level view */
-export const DEFAULT_ZOOM = 5;
+/** Default zoom level — street level for Izmir */
+export const DEFAULT_ZOOM = 13;
 
 /**
  * CartoDB Dark Matter tile URL.
