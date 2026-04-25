@@ -1,0 +1,116 @@
+/**
+ * detective.css
+ * Subtle atmospheric effects for the Find Podo detective theme.
+ * Goal: enhance mood without hurting readability.
+ * All effects use low opacity and are applied only to structural chrome,
+ * never to text or interactive elements.
+ */
+
+/* ── Custom scrollbar ────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #3f3f46; /* zinc-700 */
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #52525b; /* zinc-600 */
+}
+
+/* ── Scanline overlay on sidebar ─────────────────────────────────────── */
+/* Applied via a ::before pseudo-element so it never sits over content */
+.sidebar-scanlines {
+  position: relative;
+}
+.sidebar-scanlines::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 3px,
+    rgba(0, 0, 0, 0.06) 3px,
+    rgba(0, 0, 0, 0.06) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── Evidence card hover glow ────────────────────────────────────────── */
+.evidence-card-hover {
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+.evidence-card-hover:hover {
+  border-color: rgba(251, 191, 36, 0.2); /* amber-400/20 */
+  box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.08);
+}
+
+/* ── Detail drawer slide transition ─────────────────────────────────── */
+/* Tailwind handles the translate class; this adds will-change for GPU hint */
+.detail-drawer {
+  will-change: transform;
+}
+
+/* ── "NEW" badge pulse ───────────────────────────────────────────────── */
+@keyframes badge-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+.badge-new {
+  animation: badge-pulse 1.5s ease-in-out infinite;
+}
+
+/* ── Radar sweep spin (used by LoadingState) ─────────────────────────── */
+@keyframes radar-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.radar-spin {
+  animation: radar-spin 1.2s linear infinite;
+}
+
+/* ── Tab switch fade ─────────────────────────────────────────────────── */
+.tab-content-enter {
+  animation: fadeIn 150ms ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Noise texture on sidebar panel ─────────────────────────────────── */
+/* SVG-based noise as a data URI — tiny, no external request, very subtle */
+.panel-noise {
+  position: relative;
+}
+.panel-noise::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.018;
+  pointer-events: none;
+  z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+}
+
+/* ── Leaflet popup dark theme override ───────────────────────────────── */
+.leaflet-popup-content-wrapper {
+  background: #18181b !important; /* zinc-900 */
+  color: #e4e4e7 !important;       /* zinc-200 */
+  border: 1px solid #3f3f46 !important;
+  border-radius: 6px !important;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.6) !important;
+}
+.leaflet-popup-tip {
+  background: #18181b !important;
+}
+.leaflet-popup-close-button {
+  color: #71717a !important;
+}

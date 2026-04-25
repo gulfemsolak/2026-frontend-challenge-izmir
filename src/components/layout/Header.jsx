@@ -21,7 +21,7 @@ export default function Header({ lastUpdated = null, isLive = true, topLocation 
         <div className="flex items-center gap-3">
           <img
             src="https://cdn.jotfor.ms/assets/resources/podo/n_podo_2.png"
-            alt="Podo mascot"
+            alt="Podo - Missing Mascot"
             className="h-8 w-8 object-contain"
           />
           <div>

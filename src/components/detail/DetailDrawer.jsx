@@ -48,7 +48,7 @@ export default function DetailDrawer({ allEvidence }) {
 
       {/* Drawer panel */}
       <aside
-        className={`fixed inset-y-0 right-0 z-50 w-full max-w-sm bg-zinc-900 border-l border-zinc-800 flex flex-col overflow-hidden transition-transform duration-300 ease-in-out ${
+        className={`detail-drawer fixed inset-y-0 right-0 z-50 w-full max-w-sm bg-zinc-900 border-l border-zinc-800 flex flex-col overflow-hidden transition-transform duration-300 ease-in-out ${
           isDetailOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
