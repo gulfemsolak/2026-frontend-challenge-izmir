@@ -1,8 +1,7 @@
 /**
  * @file EvidenceList.jsx
- * @description Scrollable list of evidence cards, filtered to a given type tab.
- * Renders EvidenceCard for most types and AnonymousTipCard for tips.
- * Handles empty state gracefully.
+ * @description Scrollable list of evidence cards. Renders AnonymousTipCard for tips
+ * and EvidenceCard for all other types. Shows EmptyState when no items match.
  *
  * @param {Object}         props
  * @param {EvidenceItem[]} props.items - Pre-filtered evidence items to render
@@ -10,14 +9,11 @@
 
 import EvidenceCard from './EvidenceCard.jsx';
 import AnonymousTipCard from './AnonymousTipCard.jsx';
+import EmptyState from '../ui/EmptyState.jsx';
 
 export default function EvidenceList({ items }) {
   if (items.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center flex-1 py-12 text-zinc-700 font-mono text-xs uppercase tracking-widest">
-        <span>No evidence found.</span>
-      </div>
-    );
+    return <EmptyState message="No clues found in this category." />;
   }
 
   return (

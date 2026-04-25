@@ -1,7 +1,7 @@
 /**
  * @file EvidencePanel.jsx
- * @description Tabbed panel with search, filters, and a scrollable evidence list.
- * Filtering priority: tab → activeFilters.types (all-tab only) → dateRange → searchQuery.
+ * @description Tabbed panel with search, filters, and scrollable evidence list.
+ * Filtering: tab → activeFilters.types (all-tab only) → dateRange → searchQuery.
  */
 
 import { useMemo } from 'react';
@@ -10,6 +10,8 @@ import useAppStore from '../../store/useAppStore.js';
 import SearchBar from '../search/SearchBar.jsx';
 import FilterBar from '../search/FilterBar.jsx';
 import EvidenceList from './EvidenceList.jsx';
+import LoadingState from '../ui/LoadingState.jsx';
+import ErrorState from '../ui/ErrorState.jsx';
 
 const TABS = [
   { key: 'all', label: 'All' },
@@ -18,29 +20,26 @@ const TABS = [
 
 /**
  * @param {Object}         props
- * @param {EvidenceItem[]} props.evidence  - All evidence items sorted newest-first
+ * @param {EvidenceItem[]} props.evidence
  * @param {boolean}        props.isLoading
  * @param {boolean}        props.isError
  * @param {Function}       props.onRefetch
  */
 export default function EvidencePanel({ evidence, isLoading, isError, onRefetch }) {
-  const activeTab    = useAppStore((state) => state.activeTab);
-  const setActiveTab = useAppStore((state) => state.setActiveTab);
-  const searchQuery  = useAppStore((state) => state.searchQuery);
+  const activeTab     = useAppStore((state) => state.activeTab);
+  const setActiveTab  = useAppStore((state) => state.setActiveTab);
+  const searchQuery   = useAppStore((state) => state.searchQuery);
   const activeFilters = useAppStore((state) => state.activeFilters);
 
   const filteredItems = useMemo(() => {
-    // 1. Tab filter
     let items = activeTab === 'all'
       ? evidence
       : evidence.filter((item) => item.type === activeTab);
 
-    // 2. Type checkboxes — only meaningful on the 'all' tab
     if (activeTab === 'all' && activeFilters.types.length < FORM_TYPE_KEYS.length) {
       items = items.filter((item) => activeFilters.types.includes(item.type));
     }
 
-    // 3. Date range filter
     if (activeFilters.dateRange) {
       const [start, end] = activeFilters.dateRange;
       items = items.filter((item) => {
@@ -49,7 +48,6 @@ export default function EvidencePanel({ evidence, isLoading, isError, onRefetch 
       });
     }
 
-    // 4. Text search across all meaningful fields
     const query = searchQuery.trim().toLowerCase();
     if (query) {
       items = items.filter(
@@ -105,26 +103,13 @@ export default function EvidencePanel({ evidence, isLoading, isError, onRefetch 
         })}
       </div>
 
-      {/* Content */}
-      {isLoading && (
-        <div className="flex flex-1 items-center justify-center font-mono text-xs text-amber-400 uppercase tracking-widest animate-pulse">
-          Scanning for clues…
-        </div>
-      )}
-
+      {isLoading && <LoadingState />}
       {isError && !isLoading && (
-        <div className="flex flex-col flex-1 items-center justify-center gap-3">
-          <p className="font-mono text-xs text-red-400 uppercase tracking-widest">Signal lost.</p>
-          <button
-            type="button"
-            onClick={onRefetch}
-            className="font-mono text-[10px] uppercase tracking-widest text-zinc-400 border border-zinc-700 hover:border-zinc-500 rounded px-3 py-1.5 transition-colors"
-          >
-            Retry
-          </button>
-        </div>
+        <ErrorState
+          message="Could not fetch evidence from Jotform."
+          onRetry={onRefetch}
+        />
       )}
-
       {!isLoading && !isError && <EvidenceList items={filteredItems} />}
     </div>
   );
