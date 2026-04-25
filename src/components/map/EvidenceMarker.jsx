@@ -1,40 +1,59 @@
 /**
  * @file EvidenceMarker.jsx
- * @description A CircleMarker for a single evidence item on the Leaflet map.
- * Uses CircleMarker (not Marker) to avoid Vite's broken default-icon issue.
- * Color is derived from the evidence type via FORM_TYPES config.
- * Clicking the marker opens the detail drawer via Zustand.
+ * @description Animated Leaflet DivIcon marker for a single evidence item.
+ * Uses DivIcon (not CircleMarker) so CSS keyframe animations can be applied.
+ *
+ * - Default pins: solid colored circle matching evidence type
+ * - isLatest=true: permanent pulsing red ring ("LAST SEEN HERE")
+ * - isTopLocation=true: rotating amber dashed ring (highest-confidence zone)
+ * - Both flags combine: latest + top shows both effects simultaneously
  *
  * @param {Object}       props
- * @param {EvidenceItem} props.item - The evidence item to render
+ * @param {EvidenceItem} props.item           - The evidence item to render
+ * @param {boolean}      [props.isLatest]     - Most recent submission in the dataset
+ * @param {boolean}      [props.isTopLocation] - Belongs to the top-confidence location
  */
 
-import { CircleMarker, Popup } from 'react-leaflet';
+import { useMemo } from 'react';
+import { Marker, Popup } from 'react-leaflet';
+import L from 'leaflet';
 import { FORM_TYPES } from '../../constants/formConfig.js';
 import useAppStore from '../../store/useAppStore.js';
 import { formatRelative } from '../../utils/dateHelpers.js';
 
-export default function EvidenceMarker({ item }) {
+export default function EvidenceMarker({ item, isLatest = false, isTopLocation = false }) {
   const openDetail = useAppStore((state) => state.openDetail);
   const formConfig = FORM_TYPES[item.type];
 
   if (!item.coordinates) return null;
 
   const { lat, lng } = item.coordinates;
+  const color = formConfig?.mapColor ?? '#ffffff';
+
+  const classes = [
+    'map-pin',
+    isLatest      ? 'map-pin--latest'  : '',
+    isTopLocation ? 'map-pin--top' : '',
+  ].filter(Boolean).join(' ');
+
+  const icon = useMemo(
+    () =>
+      L.divIcon({
+        className: '',
+        html: `<div class="${classes}" style="--pin-color:${color}"></div>`,
+        iconSize: [24, 24],
+        iconAnchor: [12, 12],
+        popupAnchor: [0, -14],
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [classes, color]
+  );
 
   return (
-    <CircleMarker
-      center={[lat, lng]}
-      radius={7}
-      pathOptions={{
-        color: formConfig?.mapColor ?? '#ffffff',
-        fillColor: formConfig?.mapColor ?? '#ffffff',
-        fillOpacity: 0.85,
-        weight: 1.5,
-      }}
-      eventHandlers={{
-        click: () => openDetail(item),
-      }}
+    <Marker
+      position={[lat, lng]}
+      icon={icon}
+      eventHandlers={{ click: () => openDetail(item) }}
     >
       <Popup className="podo-popup">
         <div className="font-mono text-xs min-w-[140px]">
@@ -50,6 +69,6 @@ export default function EvidenceMarker({ item }) {
           <p className="text-zinc-600 mt-1">{formatRelative(item.submittedAt)}</p>
         </div>
       </Popup>
-    </CircleMarker>
+    </Marker>
   );
 }

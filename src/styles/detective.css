@@ -100,6 +100,75 @@
   background-size: 128px 128px;
 }
 
+/* ── Animated map pins (DivIcon) ─────────────────────────────────────── */
+.map-pin {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--pin-color, #ffffff);
+  border: 2px solid rgba(255,255,255,0.25);
+  position: relative;
+  cursor: pointer;
+  box-sizing: border-box;
+  /* Center inside the 24×24 iconSize container */
+  margin: 6px;
+}
+
+/* Latest pin: permanent pulsing red ring */
+.map-pin--latest {
+  border-color: #fbbf24;
+}
+.map-pin--latest::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 2px solid #ef4444;
+  animation: pin-pulse 1.6s ease-out infinite;
+  pointer-events: none;
+}
+
+/* Top-confidence pin: rotating amber dashed ring */
+.map-pin--top {
+  border-color: #fbbf24;
+  box-shadow: 0 0 6px rgba(251,191,36,0.4);
+}
+.map-pin--top::before {
+  content: '';
+  position: absolute;
+  inset: -7px;
+  border-radius: 50%;
+  border: 2px dashed #fbbf24;
+  animation: pin-rotate 3s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes pin-pulse {
+  0%   { transform: scale(1);   opacity: 0.9; }
+  100% { transform: scale(2.8); opacity: 0;   }
+}
+
+@keyframes pin-rotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ── Shimmer skeleton loaders ────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #27272a 0%,
+    #3f3f46 50%,
+    #27272a 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
 /* ── Leaflet popup dark theme override ───────────────────────────────── */
 .leaflet-popup-content-wrapper {
   background: #18181b !important; /* zinc-900 */
