@@ -33,7 +33,7 @@ export default function AnonymousTipCard({ item, isNew = false }) {
       tabIndex={0}
       onClick={() => openDetail(item)}
       onKeyDown={(e) => e.key === 'Enter' && openDetail(item)}
-      className="w-full text-left px-4 py-3 border-b border-zinc-800 hover:bg-zinc-800/50 transition-colors duration-150 cursor-pointer"
+      className="w-full text-left px-4 py-3 border-b border-white/5 bg-white/[0.02] hover:bg-white/[0.06] backdrop-blur-sm transition-colors duration-150 cursor-pointer"
     >
       {/* Top row */}
       <div className="flex items-start justify-between gap-2 mb-1.5">

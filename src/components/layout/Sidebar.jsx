@@ -21,7 +21,7 @@ export default function Sidebar({ children, lastUpdated = null, isLive = true, t
 
   return (
     <>
-      <aside className="sidebar-scanlines panel-noise flex flex-col w-full h-full bg-zinc-900 border-r border-zinc-800 overflow-hidden">
+      <aside className="sidebar-scanlines panel-noise flex flex-col w-full h-full bg-gradient-to-b from-zinc-900 via-zinc-900/95 to-zinc-950 border-r border-zinc-800 overflow-hidden">
         <Header lastUpdated={lastUpdated} isLive={isLive} topLocation={topLocation} />
 
         <div className="flex flex-col flex-1 overflow-hidden">

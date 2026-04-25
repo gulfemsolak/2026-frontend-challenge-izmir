@@ -39,7 +39,7 @@ export default function LastKnownPosition({ topLocation, allEvidence }) {
   const barColor = getBarColor(details.score);
 
   return (
-    <div className="shrink-0 px-4 pt-3 pb-3 border-b-2 border-zinc-800 bg-zinc-950/50">
+    <div className="shrink-0 px-4 pt-3 pb-3 border-b-2 border-white/10 bg-white/[0.06] backdrop-blur-md">
       {/* Row 1: label + active zone badge */}
       <div className="flex items-center justify-between mb-2">
         <span className="font-mono text-[9px] uppercase tracking-widest text-zinc-600">
