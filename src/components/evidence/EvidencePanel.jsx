@@ -2,6 +2,7 @@
  * @file EvidencePanel.jsx
  * @description Tabbed panel with search, filters, and scrollable evidence list.
  * Filtering: tab → activeFilters.types (all-tab only) → dateRange → searchQuery.
+ * filterKey re-keys the list on every filter change to trigger stagger animations.
  */
 
 import { useMemo } from 'react';
@@ -64,6 +65,9 @@ export default function EvidencePanel({ evidence, isLoading, isError, onRefetch 
     return items;
   }, [evidence, activeTab, activeFilters, searchQuery]);
 
+  // Changes whenever the visible set of cards changes → triggers EvidenceList remount
+  const filterKey = `${activeTab}|${searchQuery}|${activeFilters.types.join(',')}|${activeFilters.dateRange ?? ''}`;
+
   return (
     <div className="flex flex-col flex-1 overflow-hidden">
       <SearchBar />
@@ -72,6 +76,7 @@ export default function EvidencePanel({ evidence, isLoading, isError, onRefetch 
       {/* Tab bar */}
       <div className="flex overflow-x-auto border-b border-zinc-800 shrink-0" style={{ scrollbarWidth: 'none' }}>
         {TABS.map((tab) => {
+          const isActive = activeTab === tab.key;
           const count =
             tab.key === 'all'
               ? evidence.length
@@ -83,16 +88,18 @@ export default function EvidencePanel({ evidence, isLoading, isError, onRefetch 
               type="button"
               onClick={() => setActiveTab(tab.key)}
               className={`flex items-center gap-1 px-2.5 py-2 font-mono text-[10px] uppercase tracking-wider border-b-2 shrink-0 transition-colors duration-150 whitespace-nowrap ${
-                activeTab === tab.key
+                isActive
                   ? 'border-amber-400 text-amber-400'
                   : 'border-transparent text-zinc-500 hover:text-zinc-300'
               }`}
             >
               {tab.label}
+              {/* Re-keyed on activeTab change so the flash animation replays */}
               <span
+                key={isActive ? activeTab : `${tab.key}-off`}
                 className={`text-[9px] px-1 rounded ${
-                  activeTab === tab.key
-                    ? 'bg-amber-400/20 text-amber-400'
+                  isActive
+                    ? 'badge-tab-active bg-amber-400/20 text-amber-400'
                     : 'bg-zinc-800 text-zinc-600'
                 }`}
               >
@@ -116,7 +123,9 @@ export default function EvidencePanel({ evidence, isLoading, isError, onRefetch 
           onRetry={onRefetch}
         />
       )}
-      {!isLoading && !isError && <EvidenceList items={filteredItems} />}
+      {!isLoading && !isError && (
+        <EvidenceList items={filteredItems} filterKey={filterKey} />
+      )}
     </div>
   );
 }
