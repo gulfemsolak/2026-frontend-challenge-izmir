@@ -11,6 +11,7 @@ import AppShell from '../components/layout/AppShell.jsx';
 import PodoMap from '../components/map/PodoMap.jsx';
 import EvidencePanel from '../components/evidence/EvidencePanel.jsx';
 import LastKnownPosition from '../components/evidence/LastKnownPosition.jsx';
+import AIAnalysisPanel from '../components/evidence/AIAnalysisPanel.jsx';
 import DetailDrawer from '../components/detail/DetailDrawer.jsx';
 import { useAllEvidence } from '../hooks/useAllEvidence.js';
 import { scoreLocation } from '../utils/confidence.js';
@@ -50,6 +51,7 @@ export default function InvestigationPage() {
         sidebar={
           <>
             <LastKnownPosition topLocation={topLocation} allEvidence={allEvidence} />
+            <AIAnalysisPanel allEvidence={allEvidence} />
             <EvidencePanel
               evidence={allEvidence}
               isLoading={isLoading}
