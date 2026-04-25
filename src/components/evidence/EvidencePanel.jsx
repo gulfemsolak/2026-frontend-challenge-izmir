@@ -10,7 +10,7 @@ import useAppStore from '../../store/useAppStore.js';
 import SearchBar from '../search/SearchBar.jsx';
 import FilterBar from '../search/FilterBar.jsx';
 import EvidenceList from './EvidenceList.jsx';
-import LoadingState from '../ui/LoadingState.jsx';
+import SkeletonCard from '../ui/SkeletonCard.jsx';
 import ErrorState from '../ui/ErrorState.jsx';
 
 const TABS = [
@@ -103,7 +103,13 @@ export default function EvidencePanel({ evidence, isLoading, isError, onRefetch 
         })}
       </div>
 
-      {isLoading && <LoadingState />}
+      {isLoading && (
+        <ul className="flex flex-col">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <li key={i}><SkeletonCard /></li>
+          ))}
+        </ul>
+      )}
       {isError && !isLoading && (
         <ErrorState
           message="Could not fetch evidence from Jotform."
