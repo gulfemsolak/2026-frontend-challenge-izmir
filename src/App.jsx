@@ -1,9 +1,16 @@
 /**
  * @file App.jsx
- * @description Root component — routes will be wired in STEP 9.
- * Placeholder until Router and pages are in place.
+ * @description Route definitions for Find Podo.
+ * Only one route for now — the main investigation page.
  */
 
+import { Routes, Route } from 'react-router-dom';
+import InvestigationPage from './pages/InvestigationPage.jsx';
+
 export default function App() {
-  return <div>Find Podo</div>;
+  return (
+    <Routes>
+      <Route path="/" element={<InvestigationPage />} />
+    </Routes>
+  );
 }
