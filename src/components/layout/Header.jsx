@@ -15,10 +15,10 @@ import { formatRelative } from '../../utils/dateHelpers.js';
 
 export default function Header({ lastUpdated = null, isLive = true, topLocation = null }) {
   return (
-    <header className="min-h-[80px] flex flex-col border-b border-zinc-800 bg-zinc-900 shrink-0">
+    <header className="flex flex-col border-b border-zinc-800 bg-zinc-900 shrink-0">
 
       {/* ── Main row ────────────────────────────────────────────────── */}
-      <div className="flex items-center gap-3 px-4 py-3 flex-1">
+      <div className="flex items-center gap-3 px-4 py-3">
 
         {/* Mascot: fixed 40×40, never shrinks */}
         <img
@@ -27,7 +27,7 @@ export default function Header({ lastUpdated = null, isLive = true, topLocation 
           className="h-10 w-10 flex-shrink-0 object-contain"
         />
 
-        {/* Title block: fills available space, never truncates "FIND PODO" */}
+        {/* Title block: fills available space */}
         <div className="flex flex-col flex-1 min-w-0">
           <h1 className="font-mono text-sm font-bold tracking-widest text-zinc-100 uppercase whitespace-nowrap">
             Find Podo
@@ -37,7 +37,7 @@ export default function Header({ lastUpdated = null, isLive = true, topLocation 
           </span>
         </div>
 
-        {/* Right block: live dot + last-updated, stacked, shrink-0 so it stays intact */}
+        {/* Right block: live dot + last-updated, stacked */}
         <div className="flex flex-col items-end gap-0.5 flex-shrink-0">
           <div className="flex items-center gap-1.5">
             <span className="relative flex h-2 w-2 shrink-0">

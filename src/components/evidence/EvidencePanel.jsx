@@ -70,7 +70,7 @@ export default function EvidencePanel({ evidence, isLoading, isError, onRefetch 
       <FilterBar />
 
       {/* Tab bar */}
-      <div className="flex overflow-x-auto border-b border-zinc-800 shrink-0 scrollbar-none">
+      <div className="flex overflow-x-auto border-b border-zinc-800 shrink-0" style={{ scrollbarWidth: 'none' }}>
         {TABS.map((tab) => {
           const count =
             tab.key === 'all'
@@ -82,7 +82,7 @@ export default function EvidencePanel({ evidence, isLoading, isError, onRefetch 
               key={tab.key}
               type="button"
               onClick={() => setActiveTab(tab.key)}
-              className={`flex items-center gap-1.5 px-3 py-2.5 font-mono text-[10px] uppercase tracking-wider border-b-2 shrink-0 transition-colors duration-150 ${
+              className={`flex items-center gap-1 px-2.5 py-2 font-mono text-[10px] uppercase tracking-wider border-b-2 shrink-0 transition-colors duration-150 whitespace-nowrap ${
                 activeTab === tab.key
                   ? 'border-amber-400 text-amber-400'
                   : 'border-transparent text-zinc-500 hover:text-zinc-300'

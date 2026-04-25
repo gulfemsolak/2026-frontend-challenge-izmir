@@ -36,8 +36,8 @@ export default function AnonymousTipCard({ item, isNew = false }) {
       className="w-full text-left px-4 py-3 border-b border-zinc-800 hover:bg-zinc-800/50 transition-colors duration-150 cursor-pointer"
     >
       {/* Top row */}
-      <div className="flex items-center justify-between mb-1.5">
-        <div className="flex items-center gap-2">
+      <div className="flex items-start justify-between gap-2 mb-1.5">
+        <div className="flex items-center gap-1.5 flex-wrap min-w-0">
           <Badge label="Anon Tip" color="red" />
           {isNew && <Badge label="New" color="amber" variant="new" />}
           {confidence && (
@@ -47,7 +47,7 @@ export default function AnonymousTipCard({ item, isNew = false }) {
             />
           )}
         </div>
-        <span className="font-mono text-[10px] text-zinc-600 shrink-0">
+        <span className="font-mono text-[10px] text-zinc-600 shrink-0 pt-0.5">
           {formatRelative(item.submittedAt)}
         </span>
       </div>

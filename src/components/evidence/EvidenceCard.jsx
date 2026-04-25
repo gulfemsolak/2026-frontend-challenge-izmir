@@ -30,14 +30,14 @@ export default function EvidenceCard({ item, isNew = false }) {
       className="evidence-card-hover w-full text-left px-4 py-3 border-b border-zinc-800 hover:bg-zinc-800/50 transition-colors duration-150 focus:outline-none focus:bg-zinc-800/50"
     >
       {/* Top row: type badge + timestamp */}
-      <div className="flex items-center justify-between mb-1.5">
-        <div className="flex items-center gap-2">
+      <div className="flex items-start justify-between gap-2 mb-1.5">
+        <div className="flex items-center gap-1.5 flex-wrap min-w-0">
           {formConfig && (
             <Badge label={formConfig.label} color={formConfig.color} />
           )}
           {isNew && <Badge label="New" color="amber" variant="new" />}
         </div>
-        <span className="font-mono text-[10px] text-zinc-600 shrink-0">
+        <span className="font-mono text-[10px] text-zinc-600 shrink-0 pt-0.5">
           {formatRelative(item.submittedAt)}
         </span>
       </div>

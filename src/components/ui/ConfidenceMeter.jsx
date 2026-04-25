@@ -23,7 +23,7 @@ export default function ConfidenceMeter({ score, location, compact = false }) {
     return (
       <div className="flex flex-col gap-0.5" title={`Confidence score: ${score}/100`}>
         <div className="flex items-center justify-between gap-2">
-          <span className="font-mono text-[9px] text-zinc-500 uppercase tracking-widest truncate max-w-[120px]">
+          <span className="font-mono text-[9px] text-zinc-500 uppercase tracking-widest truncate flex-1 min-w-0">
             {location}
           </span>
           <span className="font-mono text-[9px] shrink-0" style={{ color: barColor }}>
