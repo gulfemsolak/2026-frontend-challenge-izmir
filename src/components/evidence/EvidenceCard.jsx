@@ -27,7 +27,7 @@ export default function EvidenceCard({ item, isNew = false }) {
     <button
       type="button"
       onClick={() => openDetail(item)}
-      className="evidence-card-hover w-full text-left px-4 py-3 border-b border-white/5 bg-white/[0.02] hover:bg-white/[0.06] backdrop-blur-sm transition-colors duration-150 focus:outline-none focus:bg-white/[0.06]"
+      className="evidence-card-hover cursor-pointer w-full text-left px-4 py-3 border-b border-white/5 bg-white/[0.02] hover:bg-white/[0.06] backdrop-blur-sm transition-colors duration-150 focus:outline-none focus:bg-white/[0.06]"
     >
       {/* Top row: type badge + timestamp */}
       <div className="flex items-start justify-between gap-2 mb-1.5">

@@ -154,12 +154,20 @@
 }
 
 /* ── Staggered card entrance animation ───────────────────────────────── */
+/*
+ * `forwards` fill-mode (not `both`) so the li is never held at opacity:0
+ * by the animation engine during the stagger delay — some mobile browsers
+ * suppress pointer events on elements that are opacity:0 via animation fill.
+ * The initial invisible state is set by the CSS class itself instead.
+ */
 @keyframes card-enter {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0);   }
 }
 .card-enter {
-  animation: card-enter 200ms ease both;
+  opacity: 0;
+  animation: card-enter 200ms ease forwards;
+  pointer-events: auto;
 }
 
 /* ── Tab badge flash on active tab switch ────────────────────────────── */
