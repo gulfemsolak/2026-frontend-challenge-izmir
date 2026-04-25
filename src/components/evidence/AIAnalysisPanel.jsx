@@ -1,7 +1,7 @@
 /**
  * @file AIAnalysisPanel.jsx
  * @description Collapsible AI analysis panel that sends the 10 most recent
- * evidence items to OpenAI gpt-4o-mini and displays a noir detective report.
+ * evidence items to Anthropic claude-haiku and displays a noir detective report.
  *
  * @param {Object}         props
  * @param {EvidenceItem[]} props.allEvidence - Full evidence pool (sorted newest-first)
@@ -10,13 +10,13 @@
 import { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
-const API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
+const API_KEY = import.meta.env.VITE_ANTHROPIC_API_KEY;
 
 export default function AIAnalysisPanel({ allEvidence }) {
-  const [isOpen, setIsOpen]         = useState(true);
-  const [report, setReport]         = useState('');
-  const [isLoading, setIsLoading]   = useState(false);
-  const [isError, setIsError]       = useState(false);
+  const [isOpen, setIsOpen]           = useState(true);
+  const [report, setReport]           = useState('');
+  const [isLoading, setIsLoading]     = useState(false);
+  const [isError, setIsError]         = useState(false);
   const [generatedAt, setGeneratedAt] = useState(null);
 
   async function handleGenerate() {
@@ -27,40 +27,37 @@ export default function AIAnalysisPanel({ allEvidence }) {
 
     const recent = allEvidence.slice(0, 10).map((item) => ({
       type:        item.type,
-      location:    item.location ?? null,
-      content:     item.content  ?? null,
+      location:    item.location  ?? null,
+      content:     item.content   ?? null,
       submittedAt: item.submittedAt,
     }));
 
     try {
-      const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${API_KEY}`,
+          'x-api-key': API_KEY,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true',
         },
         body: JSON.stringify({
-          model: 'gpt-4o-mini',
+          model: 'claude-haiku-4-5-20251001',
+          max_tokens: 300,
+          system:
+            "You are a noir detective analyzing sightings of Podo, Jotform's missing mascot in Izmir Turkey. Be dramatic but concise. Respond in 3 bullet points.",
           messages: [
             {
-              role: 'system',
-              content:
-                "You are a noir detective analyzing sightings of Podo, Jotform's missing mascot in Izmir Turkey. Be dramatic but concise.",
-            },
-            {
               role: 'user',
-              content:
-                `Analyze these evidence items and give me 3 bullet points max on where Podo likely is and why:\n\n${JSON.stringify(recent, null, 2)}`,
+              content: `Analyze these evidence items and tell me where Podo likely is and why:\n\n${JSON.stringify(recent, null, 2)}`,
             },
           ],
-          max_tokens: 300,
-          temperature: 0.7,
         }),
       });
 
-      if (!res.ok) throw new Error(`OpenAI ${res.status}`);
+      if (!res.ok) throw new Error(`Anthropic ${res.status}`);
       const data = await res.json();
-      setReport(data.choices[0].message.content.trim());
+      setReport(data.content[0].text.trim());
       setGeneratedAt(new Date());
     } catch {
       setIsError(true);
