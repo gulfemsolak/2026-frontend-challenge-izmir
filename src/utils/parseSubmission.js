@@ -37,6 +37,19 @@
  */
 
 /**
+ * Return true if a location string looks like real data.
+ * Rejects single-character noise ("d", "s") and the known garbage values
+ * submitted by test users ("dd", "ss", etc.) by requiring at least 3 chars.
+ *
+ * @param {string | null | undefined} locationString
+ * @returns {boolean}
+ */
+function isValidLocation(locationString) {
+  if (!locationString) return false;
+  return locationString.trim().length >= 3;
+}
+
+/**
  * Extract a flat key→value map from a raw submission's `answers` object.
  * Skips heading and button fields (answer is undefined or empty string).
  *
@@ -125,7 +138,7 @@ export function parseSubmission(rawSubmission, type) {
     id: String(rawSubmission.id),
     type,
     submittedAt: new Date(rawSubmission.created_at),
-    location: fields.location ?? null,
+    location: isValidLocation(fields.location) ? fields.location : null,
     coordinates: parseCoordinates(fields.coordinates),
     person: extractPerson(type, fields),
     content: extractContent(type, fields),
