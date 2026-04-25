@@ -1,19 +1,14 @@
 /**
  * @file EvidencePanel.jsx
- * @description Tabbed panel showing All evidence or filtered by type.
- * Tab state is stored in Zustand so other components can react to it.
- * Renders EvidenceList with the appropriate filtered subset.
- *
- * @param {Object}         props
- * @param {EvidenceItem[]} props.evidence  - All evidence items (pre-sorted)
- * @param {boolean}        props.isLoading
- * @param {boolean}        props.isError
- * @param {Function}       props.onRefetch - Called when user taps retry
+ * @description Tabbed panel with search, filters, and a scrollable evidence list.
+ * Filtering priority: tab → activeFilters.types (all-tab only) → dateRange → searchQuery.
  */
 
 import { useMemo } from 'react';
 import { FORM_TYPES, FORM_TYPE_KEYS } from '../../constants/formConfig.js';
 import useAppStore from '../../store/useAppStore.js';
+import SearchBar from '../search/SearchBar.jsx';
+import FilterBar from '../search/FilterBar.jsx';
 import EvidenceList from './EvidenceList.jsx';
 
 const TABS = [
@@ -21,23 +16,68 @@ const TABS = [
   ...FORM_TYPE_KEYS.map((key) => ({ key, label: FORM_TYPES[key].label })),
 ];
 
+/**
+ * @param {Object}         props
+ * @param {EvidenceItem[]} props.evidence  - All evidence items sorted newest-first
+ * @param {boolean}        props.isLoading
+ * @param {boolean}        props.isError
+ * @param {Function}       props.onRefetch
+ */
 export default function EvidencePanel({ evidence, isLoading, isError, onRefetch }) {
-  const activeTab  = useAppStore((state) => state.activeTab);
+  const activeTab    = useAppStore((state) => state.activeTab);
   const setActiveTab = useAppStore((state) => state.setActiveTab);
+  const searchQuery  = useAppStore((state) => state.searchQuery);
+  const activeFilters = useAppStore((state) => state.activeFilters);
 
   const filteredItems = useMemo(() => {
-    if (activeTab === 'all') return evidence;
-    return evidence.filter((item) => item.type === activeTab);
-  }, [evidence, activeTab]);
+    // 1. Tab filter
+    let items = activeTab === 'all'
+      ? evidence
+      : evidence.filter((item) => item.type === activeTab);
+
+    // 2. Type checkboxes — only meaningful on the 'all' tab
+    if (activeTab === 'all' && activeFilters.types.length < FORM_TYPE_KEYS.length) {
+      items = items.filter((item) => activeFilters.types.includes(item.type));
+    }
+
+    // 3. Date range filter
+    if (activeFilters.dateRange) {
+      const [start, end] = activeFilters.dateRange;
+      items = items.filter((item) => {
+        const date = new Date(item.submittedAt);
+        return date >= start && date <= end;
+      });
+    }
+
+    // 4. Text search across all meaningful fields
+    const query = searchQuery.trim().toLowerCase();
+    if (query) {
+      items = items.filter(
+        (item) =>
+          item.content?.toLowerCase().includes(query) ||
+          item.location?.toLowerCase().includes(query) ||
+          item.person?.toLowerCase().includes(query) ||
+          Object.values(item.fields ?? {}).some((val) =>
+            String(val).toLowerCase().includes(query)
+          )
+      );
+    }
+
+    return items;
+  }, [evidence, activeTab, activeFilters, searchQuery]);
 
   return (
     <div className="flex flex-col flex-1 overflow-hidden">
+      <SearchBar />
+      <FilterBar />
+
       {/* Tab bar */}
       <div className="flex overflow-x-auto border-b border-zinc-800 shrink-0 scrollbar-none">
         {TABS.map((tab) => {
-          const count = tab.key === 'all'
-            ? evidence.length
-            : evidence.filter((i) => i.type === tab.key).length;
+          const count =
+            tab.key === 'all'
+              ? evidence.length
+              : evidence.filter((i) => i.type === tab.key).length;
 
           return (
             <button
@@ -53,7 +93,9 @@ export default function EvidencePanel({ evidence, isLoading, isError, onRefetch 
               {tab.label}
               <span
                 className={`text-[9px] px-1 rounded ${
-                  activeTab === tab.key ? 'bg-amber-400/20 text-amber-400' : 'bg-zinc-800 text-zinc-600'
+                  activeTab === tab.key
+                    ? 'bg-amber-400/20 text-amber-400'
+                    : 'bg-zinc-800 text-zinc-600'
                 }`}
               >
                 {count}
@@ -63,7 +105,7 @@ export default function EvidencePanel({ evidence, isLoading, isError, onRefetch 
         })}
       </div>
 
-      {/* Content area */}
+      {/* Content */}
       {isLoading && (
         <div className="flex flex-1 items-center justify-center font-mono text-xs text-amber-400 uppercase tracking-widest animate-pulse">
           Scanning for clues…
@@ -72,9 +114,7 @@ export default function EvidencePanel({ evidence, isLoading, isError, onRefetch 
 
       {isError && !isLoading && (
         <div className="flex flex-col flex-1 items-center justify-center gap-3">
-          <p className="font-mono text-xs text-red-400 uppercase tracking-widest">
-            Signal lost.
-          </p>
+          <p className="font-mono text-xs text-red-400 uppercase tracking-widest">Signal lost.</p>
           <button
             type="button"
             onClick={onRefetch}
@@ -85,9 +125,7 @@ export default function EvidencePanel({ evidence, isLoading, isError, onRefetch 
         </div>
       )}
 
-      {!isLoading && !isError && (
-        <EvidenceList items={filteredItems} />
-      )}
+      {!isLoading && !isError && <EvidenceList items={filteredItems} />}
     </div>
   );
 }
