@@ -9,7 +9,7 @@ Podo, Jotform's beloved mascot, has gone missing. **Find Podo** is a real-time d
 ## Features
 
 - **Live evidence map** — animated DivIcon markers per evidence type; the most recent sighting pulses with a red ring, and the top-confidence location gets a rotating amber dashed ring
-- **AI Investigator Panel** — one-click OpenAI gpt-4o-mini analysis of the 10 most recent clues; returns a noir-style 3-bullet detective report on Podo's likely whereabouts
+- **AI Investigator Panel** — one-click Anthropic claude-haiku analysis of the 10 most recent clues; returns a noir-style 3-bullet detective report on Podo's likely whereabouts
 - **Glassmorphism UI** — sidebar panels use `backdrop-blur`, `bg-white/[0.06]`, and gradient backgrounds for a polished dark-glass aesthetic
 - **Evidence filtering & search** — tabbed by type (All / Check-ins / Sightings / Messages / Notes / Tips), debounced full-text search, type checkboxes, and date range filter; staggered card entrance animations on every filter change
 - **Confidence scoring** — 0–100 score per location (recency 40%, source diversity 30%, volume 30%) displayed in the header and highlighted on the map
@@ -40,7 +40,7 @@ cp .env.example .env   # or create manually:
 `.env` (required):
 ```
 VITE_JOTFORM_API_KEY=your_jotform_api_key
-VITE_OPENAI_API_KEY=your_openai_api_key
+VITE_ANTHROPIC_API_KEY=your_anthropic_api_key
 ```
 
 ```bash
@@ -66,7 +66,7 @@ Open [http://localhost:5173](http://localhost:5173).
 | Map | React Leaflet 5 + CartoDB Dark Matter | No API key, dark theme built-in, DivIcon for CSS animations |
 | Data fetching | TanStack React Query v5 | Automatic caching, background refetch, staleTime control |
 | Global UI state | Zustand | Minimal boilerplate for selected item, filters, search |
-| AI analysis | OpenAI gpt-4o-mini | Fast, cheap, dramatically appropriate |
+| AI analysis | Anthropic claude-haiku-4-5 | Fast, cheap, dramatically appropriate |
 | Icons | Lucide React | Consistent, tree-shakeable |
 | Date formatting | date-fns | Lightweight, modular |
 
@@ -83,7 +83,7 @@ Jotform API (/submissions × 5 forms)
 InvestigationPage
     ├── PodoMap        (animated DivIcon markers, MapBoundsController)
     ├── LastKnownPosition  (top-confidence location card)
-    ├── AIAnalysisPanel    (OpenAI report, collapsible)
+    ├── AIAnalysisPanel    (Anthropic claude-haiku report, collapsible)
     ├── EvidencePanel  (tabs + search + filters + skeleton loaders)
     └── DetailDrawer   (slide-in overlay)
 ```
