@@ -1,12 +1,15 @@
 /**
  * @file InvestigationPage.jsx
- * @description Main investigation page. Composes AppShell with EvidencePanel,
- * PodoMap, and DetailDrawer. Computes topLocation for the confidence display in Header.
+ * @description Main investigation page. Composes AppShell with:
+ *   - LastKnownPosition + EvidencePanel in the sidebar
+ *   - PodoMap + TimelinePlayback in the map area
+ *   - DetailDrawer as a full-page overlay
  */
 
-import { useMemo } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 import AppShell from '../components/layout/AppShell.jsx';
 import PodoMap from '../components/map/PodoMap.jsx';
+import TimelinePlayback from '../components/map/TimelinePlayback.jsx';
 import EvidencePanel from '../components/evidence/EvidencePanel.jsx';
 import LastKnownPosition from '../components/evidence/LastKnownPosition.jsx';
 import DetailDrawer from '../components/detail/DetailDrawer.jsx';
@@ -16,32 +19,30 @@ import { scoreLocation } from '../utils/confidence.js';
 export default function InvestigationPage() {
   const { allEvidence, isLoading, isError, refetchAll } = useAllEvidence();
 
+  // null = show all pins; a Date = show only pins submitted on or before that time
+  const [playbackTime, setPlaybackTime] = useState(null);
+  const handleTimeChange = useCallback((time) => setPlaybackTime(time), []);
+
   const lastUpdated = useMemo(() => {
     if (allEvidence.length === 0) return null;
     return allEvidence[0].submittedAt;
   }, [allEvidence]);
 
-  // Group evidence by location and find the highest-confidence one
   const topLocation = useMemo(() => {
-    const locationGroups = {};
+    const groups = {};
     allEvidence.forEach((item) => {
       if (!item.location) return;
       const key = item.location.trim().toLowerCase();
-      if (!locationGroups[key]) locationGroups[key] = { label: item.location, items: [] };
-      locationGroups[key].items.push(item);
+      if (!groups[key]) groups[key] = { label: item.location, items: [] };
+      groups[key].items.push(item);
     });
 
     let best = null;
     let bestScore = 0;
-
-    for (const group of Object.values(locationGroups)) {
+    for (const group of Object.values(groups)) {
       const score = scoreLocation(group.items);
-      if (score > bestScore) {
-        bestScore = score;
-        best = { location: group.label, score };
-      }
+      if (score > bestScore) { bestScore = score; best = { location: group.label, score }; }
     }
-
     return best;
   }, [allEvidence]);
 
@@ -62,7 +63,19 @@ export default function InvestigationPage() {
             />
           </>
         }
-        map={<PodoMap evidence={allEvidence} isLoading={isLoading} />}
+        map={
+          <div className="relative h-full w-full">
+            <PodoMap
+              evidence={allEvidence}
+              isLoading={isLoading}
+              playbackTime={playbackTime}
+            />
+            <TimelinePlayback
+              allEvidence={allEvidence}
+              onTimeChange={handleTimeChange}
+            />
+          </div>
+        }
       />
       <DetailDrawer allEvidence={allEvidence} />
     </>
