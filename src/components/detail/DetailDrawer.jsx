@@ -18,8 +18,8 @@ import { formatFull, formatRelative } from '../../utils/dateHelpers.js';
 
 export default function DetailDrawer({ allEvidence }) {
   const selectedEvidence = useAppStore((state) => state.selectedEvidence);
-  const isDetailOpen     = useAppStore((state) => state.isDetailOpen);
-  const closeDetail      = useAppStore((state) => state.closeDetail);
+  const isDetailOpen = useAppStore((state) => state.isDetailOpen);
+  const closeDetail = useAppStore((state) => state.closeDetail);
 
   // Close on ESC key
   useEffect(() => {
@@ -48,9 +48,8 @@ export default function DetailDrawer({ allEvidence }) {
 
       {/* Drawer panel */}
       <aside
-        className={`detail-drawer fixed inset-y-0 right-0 z-50 w-full max-w-sm bg-zinc-900 border-l border-zinc-800 flex flex-col overflow-hidden transition-transform duration-300 ease-in-out ${
-          isDetailOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
+        className={`detail-drawer fixed inset-y-0 right-0 z-50 w-full max-w-sm bg-zinc-900 border-l border-zinc-800 flex flex-col overflow-hidden transition-transform duration-300 ease-in-out ${isDetailOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
       >
         {!selectedEvidence ? null : (
           <>

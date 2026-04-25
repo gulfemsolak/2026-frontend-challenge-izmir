@@ -11,15 +11,20 @@
   width: 4px;
   height: 4px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
-  background: #3f3f46; /* zinc-700 */
+  background: #3f3f46;
+  /* zinc-700 */
   border-radius: 2px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
-  background: #52525b; /* zinc-600 */
+  background: #52525b;
+  /* zinc-600 */
 }
 
 /* ── Scanline overlay on sidebar ─────────────────────────────────────── */
@@ -27,17 +32,16 @@
 .sidebar-scanlines {
   position: relative;
 }
+
 .sidebar-scanlines::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: repeating-linear-gradient(
-    to bottom,
-    transparent 0px,
-    transparent 3px,
-    rgba(0, 0, 0, 0.06) 3px,
-    rgba(0, 0, 0, 0.06) 4px
-  );
+  background: repeating-linear-gradient(to bottom,
+      transparent 0px,
+      transparent 3px,
+      rgba(0, 0, 0, 0.06) 3px,
+      rgba(0, 0, 0, 0.06) 4px);
   pointer-events: none;
   z-index: 1;
 }
@@ -46,8 +50,10 @@
 .evidence-card-hover {
   transition: border-color 150ms ease, box-shadow 150ms ease;
 }
+
 .evidence-card-hover:hover {
-  border-color: rgba(251, 191, 36, 0.2); /* amber-400/20 */
+  border-color: rgba(251, 191, 36, 0.2);
+  /* amber-400/20 */
   box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.08);
 }
 
@@ -59,18 +65,32 @@
 
 /* ── "NEW" badge pulse ───────────────────────────────────────────────── */
 @keyframes badge-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
 }
+
 .badge-new {
   animation: badge-pulse 1.5s ease-in-out infinite;
 }
 
 /* ── Radar sweep spin (used by LoadingState) ─────────────────────────── */
 @keyframes radar-spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
+
 .radar-spin {
   animation: radar-spin 1.2s linear infinite;
 }
@@ -79,9 +99,17 @@
 .tab-content-enter {
   animation: fadeIn 150ms ease;
 }
+
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ── Noise texture on sidebar panel ─────────────────────────────────── */
@@ -89,6 +117,7 @@
 .panel-noise {
   position: relative;
 }
+
 .panel-noise::after {
   content: '';
   position: absolute;
@@ -106,7 +135,7 @@
   height: 12px;
   border-radius: 50%;
   background-color: var(--pin-color, #ffffff);
-  border: 2px solid rgba(255,255,255,0.25);
+  border: 2px solid rgba(255, 255, 255, 0.25);
   position: relative;
   cursor: pointer;
   box-sizing: border-box;
@@ -118,6 +147,7 @@
 .map-pin--latest {
   border-color: #fbbf24;
 }
+
 .map-pin--latest::after {
   content: '';
   position: absolute;
@@ -131,8 +161,9 @@
 /* Top-confidence pin: rotating amber dashed ring */
 .map-pin--top {
   border-color: #fbbf24;
-  box-shadow: 0 0 6px rgba(251,191,36,0.4);
+  box-shadow: 0 0 6px rgba(251, 191, 36, 0.4);
 }
+
 .map-pin--top::before {
   content: '';
   position: absolute;
@@ -144,13 +175,25 @@
 }
 
 @keyframes pin-pulse {
-  0%   { transform: scale(1);   opacity: 0.9; }
-  100% { transform: scale(2.8); opacity: 0;   }
+  0% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+
+  100% {
+    transform: scale(2.8);
+    opacity: 0;
+  }
 }
 
 @keyframes pin-rotate {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ── Staggered card entrance animation ───────────────────────────────── */
@@ -161,9 +204,17 @@
  * The initial invisible state is set by the CSS class itself instead.
  */
 @keyframes card-enter {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0);   }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
+
 .card-enter {
   opacity: 0;
   animation: card-enter 200ms ease forwards;
@@ -172,40 +223,58 @@
 
 /* ── Tab badge flash on active tab switch ────────────────────────────── */
 @keyframes badge-tab-flash {
-  0%   { background-color: rgba(251,191,36,0.5); color: #fbbf24; transform: scale(1.2); }
-  100% { background-color: rgba(251,191,36,0.2); color: #fbbf24; transform: scale(1);   }
+  0% {
+    background-color: rgba(251, 191, 36, 0.5);
+    color: #fbbf24;
+    transform: scale(1.2);
+  }
+
+  100% {
+    background-color: rgba(251, 191, 36, 0.2);
+    color: #fbbf24;
+    transform: scale(1);
+  }
 }
+
 .badge-tab-active {
   animation: badge-tab-flash 300ms ease both;
 }
 
 /* ── Shimmer skeleton loaders ────────────────────────────────────────── */
 @keyframes shimmer {
-  0%   { background-position: -200% 0; }
-  100% { background-position:  200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
 }
+
 .skeleton {
-  background: linear-gradient(
-    90deg,
-    #27272a 0%,
-    #3f3f46 50%,
-    #27272a 100%
-  );
+  background: linear-gradient(90deg,
+      #27272a 0%,
+      #3f3f46 50%,
+      #27272a 100%);
   background-size: 200% 100%;
   animation: shimmer 1.6s ease-in-out infinite;
 }
 
 /* ── Leaflet popup dark theme override ───────────────────────────────── */
 .leaflet-popup-content-wrapper {
-  background: #18181b !important; /* zinc-900 */
-  color: #e4e4e7 !important;       /* zinc-200 */
+  background: #18181b !important;
+  /* zinc-900 */
+  color: #e4e4e7 !important;
+  /* zinc-200 */
   border: 1px solid #3f3f46 !important;
   border-radius: 6px !important;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.6) !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6) !important;
 }
+
 .leaflet-popup-tip {
   background: #18181b !important;
 }
+
 .leaflet-popup-close-button {
   color: #71717a !important;
 }
