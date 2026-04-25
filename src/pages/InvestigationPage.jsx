@@ -1,12 +1,12 @@
 /**
  * @file InvestigationPage.jsx
  * @description Main investigation page. Composes AppShell with the evidence sidebar
- * and the map panel. Data hooks are called here so lastUpdated can be derived
- * from the most recently fetched evidence item.
+ * and the interactive map. Derives lastUpdated from the most recent evidence item.
  */
 
 import { useMemo } from 'react';
 import AppShell from '../components/layout/AppShell.jsx';
+import PodoMap from '../components/map/PodoMap.jsx';
 import { useAllEvidence } from '../hooks/useAllEvidence.js';
 
 export default function InvestigationPage() {
@@ -23,17 +23,15 @@ export default function InvestigationPage() {
       isLive={!isError}
       sidebar={
         <div className="flex flex-col flex-1 items-center justify-center text-zinc-600 font-mono text-xs uppercase tracking-widest">
-          {isLoading && <span>Scanning for clues…</span>}
+          {isLoading && <span className="animate-pulse text-amber-400">Scanning for clues…</span>}
           {!isLoading && !isError && (
-            <span>{allEvidence.length} evidence items loaded</span>
+            <span>{allEvidence.length} evidence items — panel in STEP 12</span>
           )}
           {isError && <span className="text-red-400">Signal lost</span>}
         </div>
       }
       map={
-        <div className="h-full flex items-center justify-center bg-zinc-950 text-zinc-700 font-mono text-xs uppercase tracking-widest">
-          Map loading in STEP 11…
-        </div>
+        <PodoMap evidence={allEvidence} isLoading={isLoading} />
       }
     />
   );
