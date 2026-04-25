@@ -3,12 +3,12 @@
  * @description Leaflet map with CartoDB Dark Matter tiles, typed evidence markers,
  * and a legend. Shows ALL evidence types that have valid coordinates (checkins,
  * sightings, tips). Messages and personal notes have no coordinates so they
- * appear in the timeline only. Auto-fits to markers on first load.
+ * appear in the sidebar only. Auto-fits to markers on first load.
  *
  * @param {Object}         props
- * @param {EvidenceItem[]} props.evidence    - All evidence items
- * @param {boolean}        props.isLoading   - Show loading overlay when true
- * @param {Date|null}      props.playbackTime - If set, only show items submitted ≤ this time
+ * @param {EvidenceItem[]} props.evidence         - All evidence items
+ * @param {boolean}        props.isLoading        - Show loading overlay when true
+ * @param {string|null}    props.topLocationName  - Location name with highest confidence score
  */
 
 import { useEffect, useRef } from 'react';
@@ -22,9 +22,6 @@ import LoadingState from '../ui/LoadingState.jsx';
 /**
  * Fits the map viewport to all markers once on initial load.
  * Uses a ref so it never re-fits after the user has panned/zoomed.
- *
- * @param {Object}         props
- * @param {EvidenceItem[]} props.evidence - Only items with coordinates
  */
 function MapBoundsController({ evidence }) {
   const map = useMap();
@@ -42,13 +39,13 @@ function MapBoundsController({ evidence }) {
   return null;
 }
 
-export default function PodoMap({ evidence = [], isLoading = false, playbackTime = null }) {
-  // Show all types with valid coordinates; apply optional playback time filter
-  const visibleEvidence = evidence.filter(
-    (item) =>
-      item.coordinates &&
-      (playbackTime === null || new Date(item.submittedAt) <= playbackTime)
-  );
+export default function PodoMap({ evidence = [], isLoading = false, topLocationName = null }) {
+  const visibleEvidence = evidence.filter((item) => item.coordinates);
+
+  // First item is the latest (evidence is sorted newest-first by useAllEvidence)
+  const latestId = visibleEvidence[0]?.id ?? null;
+
+  const topKey = topLocationName?.trim().toLowerCase() ?? null;
 
   return (
     <div className="relative h-full w-full">
@@ -61,11 +58,15 @@ export default function PodoMap({ evidence = [], isLoading = false, playbackTime
         <TileLayer url={TILE_URL} attribution={TILE_ATTRIBUTION} maxZoom={19} />
         <MapBoundsController evidence={visibleEvidence} />
         {visibleEvidence.map((item) => (
-          <EvidenceMarker key={item.id} item={item} />
+          <EvidenceMarker
+            key={item.id}
+            item={item}
+            isLatest={item.id === latestId}
+            isTopLocation={topKey !== null && item.location?.trim().toLowerCase() === topKey}
+          />
         ))}
       </MapContainer>
 
-      {/* Legend sits above the playback bar; bottom-28 gives ~7rem clearance */}
       <MapLegend />
 
       {isLoading && (

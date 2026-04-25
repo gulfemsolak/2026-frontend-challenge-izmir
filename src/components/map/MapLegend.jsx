@@ -8,7 +8,7 @@ import { FORM_TYPES } from '../../constants/formConfig.js';
 
 export default function MapLegend() {
   return (
-    <div className="absolute bottom-28 right-2 z-[1000] bg-zinc-900/90 border border-zinc-700 rounded p-3 backdrop-blur-sm">
+    <div className="absolute bottom-6 right-2 z-[1000] bg-zinc-900/90 border border-zinc-700 rounded p-3 backdrop-blur-sm">
       <p className="font-mono text-[10px] text-zinc-500 uppercase tracking-widest mb-2">
         Evidence Type
       </p>

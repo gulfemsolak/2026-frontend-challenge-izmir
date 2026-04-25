@@ -6,10 +6,9 @@
  *   - DetailDrawer as a full-page overlay
  */
 
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo } from 'react';
 import AppShell from '../components/layout/AppShell.jsx';
 import PodoMap from '../components/map/PodoMap.jsx';
-import TimelinePlayback from '../components/map/TimelinePlayback.jsx';
 import EvidencePanel from '../components/evidence/EvidencePanel.jsx';
 import LastKnownPosition from '../components/evidence/LastKnownPosition.jsx';
 import DetailDrawer from '../components/detail/DetailDrawer.jsx';
@@ -18,10 +17,6 @@ import { scoreLocation } from '../utils/confidence.js';
 
 export default function InvestigationPage() {
   const { allEvidence, isLoading, isError, refetchAll } = useAllEvidence();
-
-  // null = show all pins; a Date = show only pins submitted on or before that time
-  const [playbackTime, setPlaybackTime] = useState(null);
-  const handleTimeChange = useCallback((time) => setPlaybackTime(time), []);
 
   const lastUpdated = useMemo(() => {
     if (allEvidence.length === 0) return null;
@@ -64,17 +59,11 @@ export default function InvestigationPage() {
           </>
         }
         map={
-          <div className="relative h-full w-full">
-            <PodoMap
-              evidence={allEvidence}
-              isLoading={isLoading}
-              playbackTime={playbackTime}
-            />
-            <TimelinePlayback
-              allEvidence={allEvidence}
-              onTimeChange={handleTimeChange}
-            />
-          </div>
+          <PodoMap
+            evidence={allEvidence}
+            isLoading={isLoading}
+            topLocationName={topLocation?.location ?? null}
+          />
         }
       />
       <DetailDrawer allEvidence={allEvidence} />
