@@ -10,8 +10,6 @@
 import { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
-const API_KEY = import.meta.env.VITE_ANTHROPIC_API_KEY;
-
 export default function AIAnalysisPanel({ allEvidence }) {
   const [isOpen, setIsOpen]           = useState(true);
   const [report, setReport]           = useState('');
@@ -36,10 +34,10 @@ export default function AIAnalysisPanel({ allEvidence }) {
       const res = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': API_KEY,
+          'x-api-key': import.meta.env.VITE_ANTHROPIC_API_KEY,
           'anthropic-version': '2023-06-01',
           'anthropic-dangerous-direct-browser-access': 'true',
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           model: 'claude-haiku-4-5-20251001',
